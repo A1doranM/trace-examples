@@ -1,4 +1,4 @@
-FROM node:8-alpine
+FROM node:20-alpine
 
 RUN apk add --no-cache tini git
 

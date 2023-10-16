@@ -11,7 +11,7 @@ services:
     volumes:
       - ./api-gateway/src:/usr/src/app/src
     ports:
-      - 127.0.0.1:8080:8080
+      - '127.0.0.1:8080:8080'
     labels:
       com.datadoghq.ad.logs: '[{"source": "docker", "service": "api-gateway"}]'
   auth:
@@ -26,6 +26,8 @@ services:
       com.datadoghq.ad.logs: '[{"source": "docker", "service": "auth"}]'
   user:
     build: user
+#    expose:
+#      - '8080:8080'
     environment:
       - DD_ENV
       - DD_TRACE_DEBUG
@@ -37,7 +39,7 @@ services:
   agent:
     image: datadog/agent:6.14.1
     environment:
-      - DD_ENV
+      - DD_ENV=test
       - DD_TAGS="env:${DD_ENV}"
       - DD_PROCESS_AGENT_ENABLED=true
       - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
@@ -46,9 +48,13 @@ services:
       - DD_APM_ANALYZED_SPANS=api-gateway|express.request=1,auth|express.request=1,user|express.request=1
       - DD_BIND_HOST=0.0.0.0
       - DD_LOGS_ENABLED=true
-      - DD_API_KEY
+      - DD_LOGS_INJECTION=true
       - DD_DD_URL
       - DD_APM_DD_URL
+      - DD_API_KEY
+#      - DD_API_KEY=265228b692ad4d972048711227b8d490
+      - DD_SITE=datadoghq.com  # Default. Change to eu.datadoghq.com, us3.datadoghq.com, us5.datadoghq.com as appropriate for your org
+#      - HOST_ROOT='/host/root'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /proc/:/host/proc/:ro

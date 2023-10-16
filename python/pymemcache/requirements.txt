@@ -1,2 +1,0 @@
-ddtrace
-pymemcache==1.4.4
